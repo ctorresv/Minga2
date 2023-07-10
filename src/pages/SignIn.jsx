@@ -1,10 +1,13 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Formulario } from '../components/Formulario'
+import axios from 'axios'
+import apiUrl from '../../api'
 
 export const SignIn = () => {
 
   const userName = useRef()
   const password = useRef()
+  const [logg,setLogg] = useState(false)
 
   const sendData = (e) => {
     e.preventDefault()
@@ -12,7 +15,20 @@ export const SignIn = () => {
     let user = userName.current.value
     let pass = password.current.value
 
-    console.log('User Name: ',user)
+    let data = {
+      email: user,
+      password: pass
+    }
+
+    axios.post(apiUrl + 'user/signin', data)
+      .then(res => {
+        console.log(res)
+        console.log('entramos')
+        setLogg(true)
+      })
+      .catch(err => console.log(err))
+
+    console.log('User Name: ', user)
     console.log('password: ', pass)
   }
 
@@ -29,6 +45,7 @@ export const SignIn = () => {
         </div>
         <button type="submit" className='border-[1px] border-solid border-blue-500' onClick={sendData} >Log in</button>
         <a href="">Or, sing up</a>
+        {logg ? <p>Te has loggeado</p> : <div></div>}
         <img src='https://ep01.epimg.net/elpais/imagenes/2019/10/30/album/1572424649_614672_1572453030_noticia_normal.jpg' alt="" />
       </form>
     </div>
